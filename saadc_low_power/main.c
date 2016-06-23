@@ -65,7 +65,7 @@
 
 void saadc_init(void);
 
-const nrf_drv_rtc_t            rtc = NRF_DRV_RTC_INSTANCE(2); /**< Declaring an instance of nrf_drv_rtc for RTC2. */
+const  nrf_drv_rtc_t           rtc = NRF_DRV_RTC_INSTANCE(2); /**< Declaring an instance of nrf_drv_rtc for RTC2. */
 static nrf_saadc_value_t       m_buffer_pool[2][SAADC_SAMPLES_IN_BUFFER];
 static uint32_t                m_adc_evt_counter = 0;
 static bool                    m_saadc_initialized = false;      
@@ -105,22 +105,22 @@ void uart_config(void)
 
 static void rtc_handler(nrf_drv_rtc_int_type_t int_type)
 {
-		uint32_t err_code;
+    uint32_t err_code;
 	
     if (int_type == NRF_DRV_RTC_INT_COMPARE0)
     {		
-				if(!m_saadc_initialized)
-				{
-						saadc_init();                                              //Initialize the SAADC. In the case when SAADC_SAMPLES_IN_BUFFER > 1 then we only need to initialize the SAADC when the the buffer is empty.
-				}
-				m_saadc_initialized = true;                                    //Set SAADC as initialized
-				nrf_drv_saadc_sample();                                        //Trigger the SAADC SAMPLE task
+        if(!m_saadc_initialized)
+        {
+            saadc_init();                                              //Initialize the SAADC. In the case when SAADC_SAMPLES_IN_BUFFER > 1 then we only need to initialize the SAADC when the the buffer is empty.
+        }
+        m_saadc_initialized = true;                                    //Set SAADC as initialized
+        nrf_drv_saadc_sample();                                        //Trigger the SAADC SAMPLE task
 			
-				LEDS_INVERT(BSP_LED_0_MASK);                                   //Toggle LED1 to indicate SAADC sampling start
+        LEDS_INVERT(BSP_LED_0_MASK);                                   //Toggle LED1 to indicate SAADC sampling start
 			
-				err_code = nrf_drv_rtc_cc_set(&rtc,0,RTC_CC_VALUE,true);       //Set RTC compare value. This needs to be done every time as the nrf_drv_rtc clears the compare register on every compare match
-				APP_ERROR_CHECK(err_code);
-				nrf_drv_rtc_counter_clear(&rtc);                               //Clear the RTC counter to start count from zero
+        err_code = nrf_drv_rtc_cc_set(&rtc,0,RTC_CC_VALUE,true);       //Set RTC compare value. This needs to be done every time as the nrf_drv_rtc clears the compare register on every compare match
+        APP_ERROR_CHECK(err_code);
+        nrf_drv_rtc_counter_clear(&rtc);                               //Clear the RTC counter to start count from zero
     }
 }
 
@@ -154,22 +154,22 @@ void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
     {
         ret_code_t err_code;
 			
-				LEDS_INVERT(BSP_LED_1_MASK);                                                                    //Toggle LED2 to indicate SAADC buffer full		
+        LEDS_INVERT(BSP_LED_1_MASK);                                                                    //Toggle LED2 to indicate SAADC buffer full		
 
-				if((m_adc_evt_counter % SAADC_CALIBRATION_INTERVAL) == 0)                                       //Evaluate if offset calibration should be performed. Configure the SAADC_CALIBRATION_INTERVAL constant to change the calibration frequency
-				{
+        if((m_adc_evt_counter % SAADC_CALIBRATION_INTERVAL) == 0)                                       //Evaluate if offset calibration should be performed. Configure the SAADC_CALIBRATION_INTERVAL constant to change the calibration frequency
+        {
 #ifdef UART_PRINTING_ENABLED
-						printf("SAADC calibration starting...  \r\n");                                              //Print on UART
+            printf("SAADC calibration starting...  \r\n");                                              //Print on UART
 #endif //UART_PRINTING_ENABLED						
-						NRF_SAADC->EVENTS_CALIBRATEDONE = 0;                                                        //Clear the calibration event flag
-						nrf_saadc_task_trigger(NRF_SAADC_TASK_CALIBRATEOFFSET);                                     //Trigger calibration task
-						while(!NRF_SAADC->EVENTS_CALIBRATEDONE);                                                    //Wait until calibration task is completed. The calibration tasks takes about 1000us with 10us acquisition time. Configuring shorter or longer acquisition time will make the calibration take shorter or longer respectively.
-					  while(NRF_SAADC->STATUS == (SAADC_STATUS_STATUS_Busy << SAADC_STATUS_STATUS_Pos));          //Additional wait for busy flag to clear. Without this wait, calibration is actually not completed. This may take additional 100us - 300us
+            NRF_SAADC->EVENTS_CALIBRATEDONE = 0;                                                        //Clear the calibration event flag
+            nrf_saadc_task_trigger(NRF_SAADC_TASK_CALIBRATEOFFSET);                                     //Trigger calibration task
+            while(!NRF_SAADC->EVENTS_CALIBRATEDONE);                                                    //Wait until calibration task is completed. The calibration tasks takes about 1000us with 10us acquisition time. Configuring shorter or longer acquisition time will make the calibration take shorter or longer respectively.
+            while(NRF_SAADC->STATUS == (SAADC_STATUS_STATUS_Busy << SAADC_STATUS_STATUS_Pos));          //Additional wait for busy flag to clear. Without this wait, calibration is actually not completed. This may take additional 100us - 300us
             LEDS_INVERT(BSP_LED_2_MASK);                                                                //Toggle LED3 to indicate SAADC calibration complete
 #ifdef UART_PRINTING_ENABLED
-						printf("SAADC calibration complete ! \r\n");                                                //Print on UART
+            printf("SAADC calibration complete ! \r\n");                                                //Print on UART
 #endif //UART_PRINTING_ENABLED	
-				}
+        }
      
         err_code = nrf_drv_saadc_buffer_convert(p_event->data.done.p_buffer, SAADC_SAMPLES_IN_BUFFER);  //Set buffer so the SAADC can write to it again. This is either "buffer 1" or "buffer 2"
         APP_ERROR_CHECK(err_code);
@@ -182,47 +182,47 @@ void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
         m_adc_evt_counter++;
 #endif //UART_PRINTING_ENABLED				
 				
-				nrf_drv_saadc_uninit();                                                                   //Unintialize SAADC to disable EasyDMA and save power
+        nrf_drv_saadc_uninit();                                                                   //Unintialize SAADC to disable EasyDMA and save power
         NRF_SAADC->INTENCLR = (SAADC_INTENCLR_END_Clear << SAADC_INTENCLR_END_Pos);               //Disable the SAADC interrupt
         NVIC_ClearPendingIRQ(SAADC_IRQn);                                                         //Clear the SAADC interrupt if set
-				m_saadc_initialized = false;                                                              //Set SAADC as uninitialized
+        m_saadc_initialized = false;                                                              //Set SAADC as uninitialized
     }
 }
 
 void saadc_init(void)
 {
     ret_code_t err_code;
-		nrf_drv_saadc_config_t saadc_config;
+    nrf_drv_saadc_config_t saadc_config;
     nrf_saadc_channel_config_t channel_config;
 	
-		//Configure SAADC
-		saadc_config.resolution = NRF_SAADC_RESOLUTION_12BIT;                                 //Set SAADC resolution to 12-bit. This will make the SAADC output values from 0 (when input voltage is 0V) to 2^12=2048 (when input voltage is 3.6V for channel gain setting of 1/6).
-		saadc_config.oversample = SAADC_OVERSAMPLE;                                           //Set oversample to 4x. This will make the SAADC output a single averaged value when the SAMPLE task is triggered 4 times.
-		saadc_config.interrupt_priority = APP_IRQ_PRIORITY_LOW;                               //Set SAADC interrupt to low priority.
+    //Configure SAADC
+    saadc_config.resolution = NRF_SAADC_RESOLUTION_12BIT;                                 //Set SAADC resolution to 12-bit. This will make the SAADC output values from 0 (when input voltage is 0V) to 2^12=2048 (when input voltage is 3.6V for channel gain setting of 1/6).
+    saadc_config.oversample = SAADC_OVERSAMPLE;                                           //Set oversample to 4x. This will make the SAADC output a single averaged value when the SAMPLE task is triggered 4 times.
+    saadc_config.interrupt_priority = APP_IRQ_PRIORITY_LOW;                               //Set SAADC interrupt to low priority.
 	
-		//Initialize SAADC
+    //Initialize SAADC
     err_code = nrf_drv_saadc_init(&saadc_config, saadc_callback);                         //Initialize the SAADC with configuration and callback function. The application must then implement the saadc_callback function, which will be called when SAADC interrupt is triggered
     APP_ERROR_CHECK(err_code);
 		
-		//Configure SAADC channel
-		channel_config.reference = NRF_SAADC_REFERENCE_INTERNAL;                              //Set internal reference of fixed 0.6 volts
-		channel_config.gain = NRF_SAADC_GAIN1_6;                                              //Set input gain to 1/6. The maximum SAADC input voltage is then 0.6V/(1/6)=3.6V. The single ended input range is then 0V-3.6V
-		channel_config.acq_time = NRF_SAADC_ACQTIME_10US;                                     //Set acquisition time. Set low acquisition time to enable maximum sampling frequency of 200kHz. Set high acquisition time to allow maximum source resistance up to 800 kohm, see the SAADC electrical specification in the PS. 
-		channel_config.mode = NRF_SAADC_MODE_SINGLE_ENDED;                                    //Set SAADC as single ended. This means it will only have the positive pin as input, and the negative pin is shorted to ground (0V) internally.
-		channel_config.pin_p = NRF_SAADC_INPUT_AIN0;                                          //Select the input pin for the channel. AIN0 pin maps to physical pin P0.02.
-		channel_config.pin_n = NRF_SAADC_INPUT_DISABLED;                                      //Since the SAADC is single ended, the negative pin is disabled. The negative pin is shorted to ground internally.
-		channel_config.resistor_p = NRF_SAADC_RESISTOR_DISABLED;                              //Disable pullup resistor on the input pin
-		channel_config.resistor_n = NRF_SAADC_RESISTOR_DISABLED;                              //Disable pulldown resistor on the input pin
+    //Configure SAADC channel
+    channel_config.reference = NRF_SAADC_REFERENCE_INTERNAL;                              //Set internal reference of fixed 0.6 volts
+    channel_config.gain = NRF_SAADC_GAIN1_6;                                              //Set input gain to 1/6. The maximum SAADC input voltage is then 0.6V/(1/6)=3.6V. The single ended input range is then 0V-3.6V
+    channel_config.acq_time = NRF_SAADC_ACQTIME_10US;                                     //Set acquisition time. Set low acquisition time to enable maximum sampling frequency of 200kHz. Set high acquisition time to allow maximum source resistance up to 800 kohm, see the SAADC electrical specification in the PS. 
+    channel_config.mode = NRF_SAADC_MODE_SINGLE_ENDED;                                    //Set SAADC as single ended. This means it will only have the positive pin as input, and the negative pin is shorted to ground (0V) internally.
+    channel_config.pin_p = NRF_SAADC_INPUT_AIN0;                                          //Select the input pin for the channel. AIN0 pin maps to physical pin P0.02.
+    channel_config.pin_n = NRF_SAADC_INPUT_DISABLED;                                      //Since the SAADC is single ended, the negative pin is disabled. The negative pin is shorted to ground internally.
+    channel_config.resistor_p = NRF_SAADC_RESISTOR_DISABLED;                              //Disable pullup resistor on the input pin
+    channel_config.resistor_n = NRF_SAADC_RESISTOR_DISABLED;                              //Disable pulldown resistor on the input pin
 
 	
-		//Initialize SAADC channel
+    //Initialize SAADC channel
     err_code = nrf_drv_saadc_channel_init(0, &channel_config);                            //Initialize SAADC channel 0 with the channel configuration
     APP_ERROR_CHECK(err_code);
 		
-		if(SAADC_BURST_MODE)
-		{
-				NRF_SAADC->CH[0].CONFIG |= 0x01000000;                                            //Configure burst mode for channel 0. Burst is useful together with oversampling. When triggering the SAMPLE task in burst mode, the SAADC will sample "Oversample" number of times as fast as it can and then output a single averaged value to the RAM buffer. If burst mode is not enabled, the SAMPLE task needs to be triggered "Oversample" number of times to output a single averaged value to the RAM buffer.		
-		}
+    if(SAADC_BURST_MODE)
+    {
+        NRF_SAADC->CH[0].CONFIG |= 0x01000000;                                            //Configure burst mode for channel 0. Burst is useful together with oversampling. When triggering the SAMPLE task in burst mode, the SAADC will sample "Oversample" number of times as fast as it can and then output a single averaged value to the RAM buffer. If burst mode is not enabled, the SAMPLE task needs to be triggered "Oversample" number of times to output a single averaged value to the RAM buffer.		
+    }
 
     err_code = nrf_drv_saadc_buffer_convert(m_buffer_pool[0],SAADC_SAMPLES_IN_BUFFER);    //Set SAADC buffer 1. The SAADC will start to write to this buffer
     APP_ERROR_CHECK(err_code);
@@ -236,24 +236,24 @@ void saadc_init(void)
  */
 int main(void)
 {	
-		LEDS_CONFIGURE(LEDS_MASK);                       //Configure all leds
-		LEDS_OFF(LEDS_MASK);                             //Turn off all leds
+    LEDS_CONFIGURE(LEDS_MASK);                       //Configure all leds
+    LEDS_OFF(LEDS_MASK);                             //Turn off all leds
 	
-		NRF_POWER->DCDCEN = 1;                           //Enabling the DCDC converter for lower current consumption
+    NRF_POWER->DCDCEN = 1;                           //Enabling the DCDC converter for lower current consumption
 	
 #ifdef UART_PRINTING_ENABLED
     uart_config();                                   //Configure UART. UART is used to show the SAADC sampled result.
     printf("\n\rSAADC HAL simple example.\r\n");	
 #endif //UART_PRINTING_ENABLED	
 
-		lfclk_config();                                  //Configure low frequency 32kHz clock
-		rtc_config();									                   //Configure RTC. The RTC will generate periodic interrupts. Requires 32kHz clock to operate.
+    lfclk_config();                                  //Configure low frequency 32kHz clock
+    rtc_config();									                   //Configure RTC. The RTC will generate periodic interrupts. Requires 32kHz clock to operate.
 
     while(1)
     {
         __WFE();                                     //These three commands disable the CPU. CPU will wake up again on any event or interrupt.
-				__SEV();
-				__WFE();
+        __SEV();
+        __WFE();
     }
 }
 

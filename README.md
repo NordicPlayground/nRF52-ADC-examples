@@ -16,7 +16,7 @@ Perhipheral: nRF52 SAADC
 Compatibility: nRF52 rev 1, nRF5 SDK 11.0.0
 Softdevice used: No softdevice
   
-This example enables the RTC timer to periodically trigger SAADC sampling. RTC is chosen here instead of TIMER because it is low power. The example samples on a single input pin
+This example enables the RTC timer to periodically trigger SAADC sampling. RTC is chosen here instead of TIMER because it is low power. The example samples on a single input pin, the AIN0, which maps to physical pin P0.02 on the nRF52832 IC.
 
 This SAADC example shows the following features:
 - Low Power -> Enabled with initializing SAADC when sampling and uninitializing when sampling is complete. Low power can only be obtained when UART_PRINTING_ENABLED is not defined and SAADC_SAMPLES_IN_BUFFER is 1
