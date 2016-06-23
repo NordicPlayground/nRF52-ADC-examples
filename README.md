@@ -1,44 +1,45 @@
-nrf51-ADC-examples
+nrf52-ADC-examples
 ==================
 
- This project contains code examples that show nrf51 internal ADC functionality.
+ This project contains code examples that show nrf52 SAADC functionality.
  
 Requirements
 ------------
-- nRF51 SDK version 9.0.0
-- nRF51-DK or nRF51-Dongle
+- nRF5 SDK version 11.0.0
+- nRF52-DK
 
-The project may need modifications to work with other versions or other boards. 
+To compile it, clone the repository in the \nRF5_SDK_11.0.0_89a8197\examples\peripheral\ folder.  If you download the zip, place the saadc_low_power folder into the \nRF5_SDK_11.0.0_89a8197\examples\peripheral\ folder.
 
-To compile it, clone the repository in the \nRF51_SDK_9.0.0_2e23562\examples\ble_peripheral\ folder.
-
-Documentation with project ble_app_template__ADC_sampling__app_trace__NUS
+Documentation
 -----------------
- * This project is an add-on to the ble_app_template application of nRF51 SDK 9.0.0
- * The add-on consists of ADC code in order to sample an analog input pin with the 
- * internal ADC and write the result out on UART. If the PCA_10028 board is used 
- * (nRF51-DK) the 3xLSB of the ADC result is also written out on LED_2, LED_3 and
- * LED_4 on the PCA_10028 board. LED_1 flashes to indicate the device is advertising
- * but is lid when the board is connected.
+ * Perhipheral: nRF52 SAADC
+ * Compatibility: nRF52 rev 1, nRF5 SDK 11.0.0
+ * Softdevice used: No softdevice
  *
- * periodic app_timer is used to trigger the ADC sampling. At startup, the app_timer
- * is started. When the app_timer expires, the application receives a timer callback.
- * In the timer callback handler, the ADC sampling is started. when the ADC sampling
- * finishes, the ADC interrupt handler is executed which logs the result on LEDs and 
- * UART and on NUS service. The printout on UART is performed by the app_trace library. 
- * 
- * This file contains source code for a sample application that uses the Nordic UART service (NUS).
- * Connect via BLE with Master Control Panel and the PCA10000/PCA10031 dongle, running
- * the master emulator firmware (MEFW).
+ * This example enables the RTC timer to periodically trigger SAADC sampling. RTC is chosen here instead of 
+ * TIMER because it is low power. The example samples on a single input pin
+ * This SAADC example shows the following features:
+ * - Low Power -> Enabled with initializing SAADC when sampling and uninitializing when sampling is complete.
+ *                Low power can only be obtained when UART_PRINTING_ENABLED is not defined and
+ *                SAADC_SAMPLES_IN_BUFFER is 1
+ * - Oversampling -> This reduces SAADC noise level, especially for higher SAADC resolutions, see
+ *                   https://devzone.nordicsemi.com/question/83938/nrf52832-saadc-sampling/?comment=84340#comment-84340
+ *                   Configured with the SAADC_OVERSAMPLE constant.
+ * - BURST mode -> Burst mode can be combined with oversampling, which makes the SAADC sample all oversamples as fast
+ *                 as it can with one SAMPLE task trigger. Set the SAADC_BURST_MODE constant to enable BURST mode.
+ *                         constant.
+ * - Offset Calibration -> SAADC needs to be occasionally calibrated. The desired calibration interval depends on the
+ *                         expected temperature change rate, see the nRF52832 PS for more information. The
+ *                         calibration interval can be adjusted with configuring the SAADC_CALIBRATION_INTERVAL
+ *                         constant.
+ * The SAADC sample result is printed on UART. To see the UART output, a UART terminal (e.g. Realterm) can be configured on 
+ * your PC with the UART configuration set in the uart_config function, which is also described in the saadc example documentation -> 
+ * http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v11.0.0/nrf_dev_saadc_example.html?cp=5_0_0_4_5_24
  *
- * To see the ADC result that is printed out on UART, you can set up a UART terminal. 
- * You should configure it as described on 
- * http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk51.v9.0.0/lib_trace.html?cp=4_1_0_3_6
- * If you use windows PC, you can e.g. use http://sourceforge.net/projects/realterm/
- * as the UART terminal. To see what port the board connects on, you could open 
- * Device Manager on Windows and see what ports are connected. Unplug the USB plug
- * to the nRF51 development board to see what port disappears in Device Manager, 
- * then connect the USB plug again to connect the board.
+ * Indicators on the nRF52-DK board:
+ * LED1: SAADC Sampling triggered 
+ * LED2: SAADC sampling buffer full and event received
+ * LED3: SAADC Offset calibration complete
 
 About this project
 ------------------
@@ -46,6 +47,6 @@ This application is one of several applications that has been built by the suppo
 
 However, in the hope that it still may be useful also for others than the ones we initially wrote it for, we've chosen to distribute it here on GitHub. 
 
-The application is built to be used with the official nRF51 SDK, that can be downloaded from https://www.nordicsemi.no, provided you have a product key for one of our kits.
+The application is built to be used with the official nRF5 SDK, that can be downloaded from http://developer.nordicsemi.com/
 
 Please post any questions about this project on https://devzone.nordicsemi.com.
