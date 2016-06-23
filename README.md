@@ -12,9 +12,9 @@ To compile it, clone the repository in the \nRF5_SDK_11.0.0_89a8197\examples\per
 
 Documentation
 -----------------
-Perhipheral: nRF52 SAADC
-Compatibility: nRF52 rev 1, nRF5 SDK 11.0.0
-Softdevice used: No softdevice
+- Perhipheral: nRF52 SAADC
+- Compatibility: nRF52 rev 1, nRF5 SDK 11.0.0
+- Softdevice used: No softdevice
   
 This example enables the RTC timer to periodically trigger SAADC sampling. RTC is chosen here instead of TIMER because it is low power. The example samples on a single input pin, the AIN0, which maps to physical pin P0.02 on the nRF52832 IC.
 

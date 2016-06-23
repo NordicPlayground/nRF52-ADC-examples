@@ -16,7 +16,7 @@
  * Softdevice used: No softdevice
  *
  * This example enables the RTC timer to periodically trigger SAADC sampling. RTC is chosen here instead of 
- * TIMER because it is low power. The example samples on a single input pin
+ * TIMER because it is low power. The example samples on a single input pin, the AIN0, which maps to physical pin P0.02 on the nRF52832 IC.
  * This SAADC example shows the following features:
  * - Low Power -> Enabled with initializing SAADC when sampling and uninitializing when sampling is complete.
  *                Low power can only be obtained when UART_PRINTING_ENABLED is not defined and
@@ -26,7 +26,6 @@
  *                   Configured with the SAADC_OVERSAMPLE constant.
  * - BURST mode -> Burst mode can be combined with oversampling, which makes the SAADC sample all oversamples as fast
  *                 as it can with one SAMPLE task trigger. Set the SAADC_BURST_MODE constant to enable BURST mode.
- *                         constant.
  * - Offset Calibration -> SAADC needs to be occasionally calibrated. The desired calibration interval depends on the
  *                         expected temperature change rate, see the nRF52832 PS for more information. The
  *                         calibration interval can be adjusted with configuring the SAADC_CALIBRATION_INTERVAL
@@ -54,7 +53,7 @@
 #include "nrf_drv_clock.h"
 #include "nrf_drv_rtc.h"
 
-#define UART_PRINTING_ENABLED							        //Enable to see SAADC output on UART. Comment out for low power operation.
+#define UART_PRINTING_ENABLED                     //Enable to see SAADC output on UART. Comment out for low power operation.
 #define UART_TX_BUF_SIZE 256                      //UART TX buffer size. 
 #define UART_RX_BUF_SIZE 1                        //UART RX buffer size. 
 #define RTC_CC_VALUE 8                            //Determines the RTC interrupt frequency and thereby the SAADC sampling frequency
@@ -247,7 +246,7 @@ int main(void)
 #endif //UART_PRINTING_ENABLED	
 
     lfclk_config();                                  //Configure low frequency 32kHz clock
-    rtc_config();									                   //Configure RTC. The RTC will generate periodic interrupts. Requires 32kHz clock to operate.
+    rtc_config();                                    //Configure RTC. The RTC will generate periodic interrupts. Requires 32kHz clock to operate.
 
     while(1)
     {
