@@ -31,6 +31,14 @@ Indicators on the nRF52-DK board:
 - LED2: SAADC sampling buffer full and event received
 - LED3: SAADC Offset calibration complete
 
+The **offset calibration** task is triggered and when calibration is done, the SAADC throws a "calibration done" event. However, the calibration is note complete until the "saadc busy" flag is cleared. In this code example, we wait for the offset calibration event and additionally we wait for the saadc busy flag to clear. The table below shows how long it typically takes to calibrate the saadc for different acquisition time setting.
+
+Acquisition time | Start cal until end cal | Start cal until saadc ready
+--------- | --------- | ---------
+**3 us** | 102 us | 118 us
+**10 us** | 279 us | 314 us
+**40 us** | 988 us | 1152 us
+
 About this project
 ------------------
 This application is one of several applications that has been built by the support team at Nordic Semiconductor, as a demo of some particular feature or use case. It has not necessarily been thoroughly tested, so there might be unknown issues. It is hence provided as-is, without any warranty. 
