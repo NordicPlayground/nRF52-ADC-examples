@@ -17,7 +17,7 @@ Documentation
 - Compatibility: nRF52 rev 1, nRF5 SDK 11.0.0
 - Softdevice used: S132 2.0.1
 
-This SAADC example samples on 4 different input pins, and enables scan mode to do that. It is otherwise an offsprint from the standard ble_app_uart example available in nRF5 SDK 11.0.0
+This SAADC example samples on 4 different input pins, and enables scan mode to do that. It is otherwise an offspring from the standard ble_app_uart example available in nRF5 SDK 11.0.0
 
 - Transmits SAADC output to hardware UART and over BLE via Nordic UART Servive (NUS).
 - Info on NUS -> http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v11.0.0/ble_sdk_app_nus_eval.html?cp=5_0_0_4_2_2_18
