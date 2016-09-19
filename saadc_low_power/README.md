@@ -24,7 +24,7 @@ This example consumes ~4uA when you have made the following two modifications. Y
 
 and set the SAADC buffer size to 1 with the following code 
 
-    #define SAADC_SAMPLES_IN_BUFFER 4
+    #define SAADC_SAMPLES_IN_BUFFER 1
 
 to get the low current consumption. You may want to have the line uncommented at first to see the SAADC output on UART.
 
