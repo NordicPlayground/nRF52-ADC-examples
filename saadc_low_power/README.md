@@ -37,7 +37,7 @@ This SAADC example shows the following features:
 - **BURST mode ->** Burst mode can be combined with oversampling, which makes the SAADC sample all oversamples as fast as it can with one SAMPLE task trigger. Set the SAADC_BURST_MODE constant to enable BURST mode.
 - **Offset Calibration ->** SAADC needs to be occasionally calibrated. The desired calibration interval depends on the expected temperature change rate, see the nRF52832 PS for more information. The calibration interval can be adjusted with configuring the SAADC_CALIBRATION_INTERVAL constant.
 
-The SAADC sample result is printed on UART. To see the UART output, a UART terminal (e.g. Realterm) can be configured on your PC with the UART configuration set in the uart_config function, which is also described in the saadc example documentation -> http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v11.0.0/nrf_dev_saadc_example.html?cp=5_0_0_4_5_24
+The SAADC sample result is printed on UART. To see the UART output, a UART terminal (e.g. Realterm or Termite) can be configured on your PC with the UART configuration set in the uart_config function, which is also described in the saadc example documentation -> http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v11.0.0/nrf_dev_saadc_example.html?cp=5_0_0_4_5_24
   
 Indicators on the nRF52-DK board:
 - LED1: SAADC Sampling triggered 
