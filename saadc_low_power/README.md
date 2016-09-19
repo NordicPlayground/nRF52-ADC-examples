@@ -18,15 +18,14 @@ Documentation
   
 This example enables the RTC timer to periodically trigger SAADC sampling. RTC is chosen here instead of TIMER because it is low power. The example samples on a single input pin, the AIN0, which maps to physical pin P0.02 on the nRF52832 IC.
 
-This example consumes ~4uA when you have made the following two modifications. You need to comment out the code line
+This example consumes ~4uA when you have made the following two code modifications. You need to comment out the following code line:
 
     #define UART_PRINTING_ENABLED
 
-and set the SAADC buffer size to 1 with the following code 
+You may want to have the line uncommented at first to see the SAADC output on UART. Also set the SAADC buffer size to 1 with the following code: 
 
     #define SAADC_SAMPLES_IN_BUFFER 1
 
-to get the low current consumption. You may want to have the line uncommented at first to see the SAADC output on UART.
 
 This SAADC example shows the following features:
 - **Low Power ->**    
