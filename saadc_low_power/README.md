@@ -29,11 +29,14 @@ and set the SAADC buffer size to 1 with the following code
 to get the low current consumption. You may want to have the line uncommented at first to see the SAADC output on UART.
 
 This SAADC example shows the following features:
-- Low Power -> 
-- 1) Initializing SAADC when sampling and uninitializing when sampling is complete. This will enable EasyDMA only during sampling, but leave it disabled when not sampling. The EasyDMA consumes around 1.5mA when enabled.    2) Low power can only be obtained when UART_PRINTING_ENABLED is not defined and SAADC_SAMPLES_IN_BUFFER is 1. If the UART is enabled, it will add around 700uA current consumption.  3) Enable DCDC converter at starup   4) Use RTC instead of TIMER periperal. That will save ~300uA.
-- Oversampling -> This reduces SAADC noise level, especially for higher SAADC resolutions, see https://devzone.nordicsemi.com/question/83938/nrf52832-saadc-sampling/?comment=84340#comment-84340   Configured with the SAADC_OVERSAMPLE constant.
-- BURST mode -> Burst mode can be combined with oversampling, which makes the SAADC sample all oversamples as fast as it can with one SAMPLE task trigger. Set the SAADC_BURST_MODE constant to enable BURST mode.
-- Offset Calibration -> SAADC needs to be occasionally calibrated. The desired calibration interval depends on the expected temperature change rate, see the nRF52832 PS for more information. The calibration interval can be adjusted with configuring the SAADC_CALIBRATION_INTERVAL constant.
+- **Low Power ->**    
+    1) Initializing SAADC when sampling and uninitializing when sampling is complete. This will enable EasyDMA only during sampling, but leave it disabled when not sampling. The EasyDMA consumes around 1.5mA when enabled.    
+    2) Low power can only be obtained when UART_PRINTING_ENABLED is not defined and SAADC_SAMPLES_IN_BUFFER is 1. If the UART is enabled, it will add around 700uA current consumption.  
+    3) Enable DCDC converter at starup   
+    4) Use RTC instead of TIMER periperal. That will save ~300uA.
+- **Oversampling ->** This reduces SAADC noise level, especially for higher SAADC resolutions, see https://devzone.nordicsemi.com/question/83938/nrf52832-saadc-sampling/?comment=84340#comment-84340   Configured with the SAADC_OVERSAMPLE constant.
+- **BURST mode ->** Burst mode can be combined with oversampling, which makes the SAADC sample all oversamples as fast as it can with one SAMPLE task trigger. Set the SAADC_BURST_MODE constant to enable BURST mode.
+- **Offset Calibration ->** SAADC needs to be occasionally calibrated. The desired calibration interval depends on the expected temperature change rate, see the nRF52832 PS for more information. The calibration interval can be adjusted with configuring the SAADC_CALIBRATION_INTERVAL constant.
 
 The SAADC sample result is printed on UART. To see the UART output, a UART terminal (e.g. Realterm) can be configured on your PC with the UART configuration set in the uart_config function, which is also described in the saadc example documentation -> http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v11.0.0/nrf_dev_saadc_example.html?cp=5_0_0_4_5_24
   
