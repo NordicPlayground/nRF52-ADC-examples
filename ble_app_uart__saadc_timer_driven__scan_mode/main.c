@@ -639,11 +639,11 @@ void saadc_init(void)
 
     err_code = nrf_drv_saadc_channel_init(0, &channel_0_config);
     APP_ERROR_CHECK(err_code);
-	  err_code = nrf_drv_saadc_channel_init(1, &channel_1_config);
+    err_code = nrf_drv_saadc_channel_init(1, &channel_1_config);
     APP_ERROR_CHECK(err_code);
-	  err_code = nrf_drv_saadc_channel_init(2, &channel_2_config);
+    err_code = nrf_drv_saadc_channel_init(2, &channel_2_config);
     APP_ERROR_CHECK(err_code);
-	  err_code = nrf_drv_saadc_channel_init(3, &channel_3_config);
+    err_code = nrf_drv_saadc_channel_init(3, &channel_3_config);
     APP_ERROR_CHECK(err_code);	
 
     err_code = nrf_drv_saadc_buffer_convert(m_buffer_pool[0],SAADC_SAMPLES_IN_BUFFER);
