@@ -569,39 +569,39 @@ void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
     if (p_event->type == NRF_DRV_SAADC_EVT_DONE)
     {
         ret_code_t err_code;
-				uint16_t adc_value;
-				uint8_t value[SAADC_SAMPLES_IN_BUFFER*2];
-				uint8_t bytes_to_send;
+        uint16_t adc_value;
+        uint8_t value[SAADC_SAMPLES_IN_BUFFER*2];
+        uint8_t bytes_to_send;
      
-				// set buffers
+        // set buffers
         err_code = nrf_drv_saadc_buffer_convert(p_event->data.done.p_buffer, SAADC_SAMPLES_IN_BUFFER);
         APP_ERROR_CHECK(err_code);
 						
-				// print samples on hardware UART and parse data for BLE transmission
+        // print samples on hardware UART and parse data for BLE transmission
         printf("ADC event number: %d\r\n",(int)m_adc_evt_counter);
         for (int i = 0; i < SAADC_SAMPLES_IN_BUFFER; i++)
         {
             printf("%d\r\n", p_event->data.done.p_buffer[i]);
 
-						adc_value = p_event->data.done.p_buffer[i];
-						value[i*2] = adc_value;
-						value[(i*2)+1] = adc_value >> 8;
-				}
+            adc_value = p_event->data.done.p_buffer[i];
+            value[i*2] = adc_value;
+            value[(i*2)+1] = adc_value >> 8;
+        }
 				
-				// Send data over BLE via NUS service. Makes sure not to send more than 20 bytes.
-				if((SAADC_SAMPLES_IN_BUFFER*2) <= 20) 
-				{
-						bytes_to_send = (SAADC_SAMPLES_IN_BUFFER*2);
-				}
-				else 
-				{
-						bytes_to_send = 20;
-				}
-				err_code = ble_nus_string_send(&m_nus, value, bytes_to_send);
-				if (err_code != NRF_ERROR_INVALID_STATE) 
-				{
-						APP_ERROR_CHECK(err_code);
-				}
+        // Send data over BLE via NUS service. Makes sure not to send more than 20 bytes.
+        if((SAADC_SAMPLES_IN_BUFFER*2) <= 20) 
+        {
+            bytes_to_send = (SAADC_SAMPLES_IN_BUFFER*2);
+        }
+        else 
+        {
+            bytes_to_send = 20;
+        }
+        err_code = ble_nus_string_send(&m_nus, value, bytes_to_send);
+        if (err_code != NRF_ERROR_INVALID_STATE) 
+        {
+            APP_ERROR_CHECK(err_code);
+        }
 						
         m_adc_evt_counter++;
     }
@@ -611,28 +611,28 @@ void saadc_init(void)
 {
     ret_code_t err_code;
 	
-		nrf_drv_saadc_config_t saadc_config = NRF_DRV_SAADC_DEFAULT_CONFIG;
-		saadc_config.resolution = NRF_SAADC_RESOLUTION_12BIT;
+    nrf_drv_saadc_config_t saadc_config = NRF_DRV_SAADC_DEFAULT_CONFIG;
+    saadc_config.resolution = NRF_SAADC_RESOLUTION_12BIT;
 	
     nrf_saadc_channel_config_t channel_0_config =
         NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN4);
-		channel_0_config.gain = NRF_SAADC_GAIN1_4;
-		channel_0_config.reference = NRF_SAADC_REFERENCE_VDD4;
+    channel_0_config.gain = NRF_SAADC_GAIN1_4;
+    channel_0_config.reference = NRF_SAADC_REFERENCE_VDD4;
 	
-		nrf_saadc_channel_config_t channel_1_config =
-				NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN5);
-		channel_1_config.gain = NRF_SAADC_GAIN1_4;
-		channel_1_config.reference = NRF_SAADC_REFERENCE_VDD4;
+    nrf_saadc_channel_config_t channel_1_config =
+        NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN5);
+    channel_1_config.gain = NRF_SAADC_GAIN1_4;
+    channel_1_config.reference = NRF_SAADC_REFERENCE_VDD4;
 	
-		nrf_saadc_channel_config_t channel_2_config =
-				NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN6);
-		channel_2_config.gain = NRF_SAADC_GAIN1_4;
-		channel_2_config.reference = NRF_SAADC_REFERENCE_VDD4;
+    nrf_saadc_channel_config_t channel_2_config =
+        NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN6);
+    channel_2_config.gain = NRF_SAADC_GAIN1_4;
+    channel_2_config.reference = NRF_SAADC_REFERENCE_VDD4;
 	
-		nrf_saadc_channel_config_t channel_3_config =
-				NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN7);
-		channel_3_config.gain = NRF_SAADC_GAIN1_4;
-		channel_3_config.reference = NRF_SAADC_REFERENCE_VDD4;				
+    nrf_saadc_channel_config_t channel_3_config =
+        NRF_DRV_SAADC_DEFAULT_CHANNEL_CONFIG_SE(NRF_SAADC_INPUT_AIN7);
+    channel_3_config.gain = NRF_SAADC_GAIN1_4;
+    channel_3_config.reference = NRF_SAADC_REFERENCE_VDD4;				
 	
     err_code = nrf_drv_saadc_init(&saadc_config, saadc_callback);
     APP_ERROR_CHECK(err_code);
