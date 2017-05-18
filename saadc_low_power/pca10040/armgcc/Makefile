@@ -53,6 +53,8 @@ $(abspath ../../../../../components/drivers_nrf/saadc/nrf_drv_saadc.c) \
 $(abspath ../../../../../components/drivers_nrf/timer/nrf_drv_timer.c) \
 $(abspath ../../../../../components/drivers_nrf/uart/nrf_drv_uart.c) \
 $(abspath ../../../../../components/drivers_nrf/hal/nrf_saadc.c) \
+$(abspath ../../../../../components/drivers_nrf/rtc/nrf_drv_rtc.c) \
+$(abspath ../../../../../components/drivers_nrf/clock/nrf_drv_clock.c) \
 
 #assembly files common to all targets
 ASM_SOURCE_FILES  = $(abspath ../../../../../components/toolchain/gcc/gcc_startup_nrf52.s)
@@ -77,6 +79,8 @@ INC_PATHS += -I$(abspath ../../../../../components/drivers_nrf/config)
 INC_PATHS += -I$(abspath ../../../../../components/drivers_nrf/saadc)
 INC_PATHS += -I$(abspath ../../../../../components/libraries/fifo)
 INC_PATHS += -I$(abspath ../../../../../components/toolchain/gcc)
+INC_PATHS += -I$(abspath ../../../../../components/drivers_nrf/clock)
+INC_PATHS += -I$(abspath ../../../../../components/drivers_nrf/rtc)
 
 OBJECT_DIRECTORY = _build
 LISTING_DIRECTORY = $(OBJECT_DIRECTORY)
