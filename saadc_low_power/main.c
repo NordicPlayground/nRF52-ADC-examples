@@ -1,20 +1,48 @@
-/* Copyright (c) 2016 Nordic Semiconductor. All Rights Reserved.
- *
- * The information contained herein is property of Nordic Semiconductor ASA.
- * Terms and conditions of usage are described in detail in NORDIC
- * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
- *
- * Licensees are granted free, non-transferable use of the information. NO
- * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
- * the file.
- *
+/**
+ * Copyright (c) 2014 - 2017, Nordic Semiconductor ASA
+ * 
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form, except as embedded into a Nordic
+ *    Semiconductor ASA integrated circuit in a product or a software update for
+ *    such product, must reproduce the above copyright notice, this list of
+ *    conditions and the following disclaimer in the documentation and/or other
+ *    materials provided with the distribution.
+ * 
+ * 3. Neither the name of Nordic Semiconductor ASA nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ * 
+ * 4. This software, with or without modification, must only be used with a
+ *    Nordic Semiconductor ASA integrated circuit.
+ * 
+ * 5. Any software provided in binary form under this license must not be reverse
+ *    engineered, decompiled, modified and/or disassembled.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY NORDIC SEMICONDUCTOR ASA "AS IS" AND ANY EXPRESS
+ * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL NORDIC SEMICONDUCTOR ASA OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+ * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
  */
-
 /** 
  * Perhipheral: nRF52 SAADC
- * Compatibility: nRF52 rev 1, nRF5 SDK 11.0.0
+ * Compatibility: nRF52832 rev 1/nRF52840 Eng A, nRF5 SDK 13.0.0
  * Softdevice used: No softdevice
  *
+
  * This example enables the RTC timer to periodically trigger SAADC sampling. RTC is chosen here instead of 
  * TIMER because it is low power. The example samples on a single input pin, the AIN0, which maps to physical pin P0.02 on the nRF52832 IC.
  * This SAADC example shows the following features:
@@ -34,6 +62,7 @@
  * your PC with the UART configuration set in the uart_config function, which is also described in the saadc example documentation -> 
  * http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v11.0.0/nrf_dev_saadc_example.html?cp=5_0_0_4_5_24
  *
+
  * Indicators on the nRF52-DK board:
  * LED1: SAADC Sampling triggered 
  * LED2: SAADC sampling buffer full and event received
@@ -47,72 +76,42 @@
 #include "nrf.h"
 #include "nrf_drv_saadc.h"
 #include "boards.h"
-#include "app_uart.h"
 #include "app_error.h"
 #include "app_util_platform.h"
+#include "nrf_pwr_mgmt.h"
+#include "nrf_drv_power.h"
 #include "nrf_drv_clock.h"
 #include "nrf_drv_rtc.h"
+
+#define NRF_LOG_MODULE_NAME "APP"
+#include "nrf_log.h"
+#include "nrf_log_ctrl.h"
 
 #define UART_PRINTING_ENABLED                     //Enable to see SAADC output on UART. Comment out for low power operation.
 #define UART_TX_BUF_SIZE 256                      //UART TX buffer size. 
 #define UART_RX_BUF_SIZE 1                        //UART RX buffer size. 
+#define RTC_FREQUENCY 32                          //Determines the RTC frequency and prescaler
 #define RTC_CC_VALUE 8                            //Determines the RTC interrupt frequency and thereby the SAADC sampling frequency
 #define SAADC_CALIBRATION_INTERVAL 5              //Determines how often the SAADC should be calibrated relative to NRF_DRV_SAADC_EVT_DONE event. E.g. value 5 will make the SAADC calibrate every fifth time the NRF_DRV_SAADC_EVT_DONE is received.
 #define SAADC_SAMPLES_IN_BUFFER 4                 //Number of SAADC samples in RAM before returning a SAADC event. For low power SAADC set this constant to 1. Otherwise the EasyDMA will be enabled for an extended time which consumes high current.
 #define SAADC_OVERSAMPLE NRF_SAADC_OVERSAMPLE_4X  //Oversampling setting for the SAADC. Setting oversample to 4x This will make the SAADC output a single averaged value when the SAMPLE task is triggered 4 times. Enable BURST mode to make the SAADC sample 4 times when triggering SAMPLE task once.
 #define SAADC_BURST_MODE 1                        //Set to 1 to enable BURST mode, otherwise set to 0.
 
+
 void saadc_init(void);
+
 
 const  nrf_drv_rtc_t           rtc = NRF_DRV_RTC_INSTANCE(2); /**< Declaring an instance of nrf_drv_rtc for RTC2. */
 static nrf_saadc_value_t       m_buffer_pool[2][SAADC_SAMPLES_IN_BUFFER];
 static uint32_t                m_adc_evt_counter = 0;
-static bool                    m_saadc_initialized = false;      
-/**
- * @brief UART events handler.
- */
-void uart_events_handler(app_uart_evt_t * p_event)
-{
-}
-
-/**
- * @brief UART initialization.
- */
-void uart_config(void)
-{
-    uint32_t                     err_code;
-    const app_uart_comm_params_t comm_params =
-    {
-        RX_PIN_NUMBER,
-        TX_PIN_NUMBER,
-        RTS_PIN_NUMBER,
-        CTS_PIN_NUMBER,
-        APP_UART_FLOW_CONTROL_DISABLED,
-        false,
-        UART_BAUDRATE_BAUDRATE_Baud115200
-    };
-
-    APP_UART_FIFO_INIT(&comm_params,
-                       UART_RX_BUF_SIZE,
-                       UART_TX_BUF_SIZE,
-                       uart_events_handler,
-                       APP_IRQ_PRIORITY_LOW,
-                       err_code);
-
-    APP_ERROR_CHECK(err_code);
-}
+static bool                    m_saadc_calibrate = false;      
 
 static void rtc_handler(nrf_drv_rtc_int_type_t int_type)
 {
     uint32_t err_code;
 	
     if (int_type == NRF_DRV_RTC_INT_COMPARE0)
-    {		
-        if(!m_saadc_initialized)
-        {
-            saadc_init();                                              //Initialize the SAADC. In the case when SAADC_SAMPLES_IN_BUFFER > 1 then we only need to initialize the SAADC when the the buffer is empty.
-        }
-        m_saadc_initialized = true;                                    //Set SAADC as initialized
+    {
         nrf_drv_saadc_sample();                                        //Trigger the SAADC SAMPLE task
 			
         LEDS_INVERT(BSP_LED_0_MASK);                                   //Toggle LED1 to indicate SAADC sampling start
@@ -127,19 +126,21 @@ static void lfclk_config(void)
 {
     ret_code_t err_code = nrf_drv_clock_init();                        //Initialize the clock source specified in the nrf_drv_config.h file, i.e. the CLOCK_CONFIG_LF_SRC constant
     APP_ERROR_CHECK(err_code);
-
     nrf_drv_clock_lfclk_request(NULL);
 }
 
 static void rtc_config(void)
 {
+
     uint32_t err_code;
 
     //Initialize RTC instance
-    err_code = nrf_drv_rtc_init(&rtc, NULL, rtc_handler);              //Initialize the RTC with callback function rtc_handler. The rtc_handler must be implemented in this applicaiton. Passing NULL here for RTC configuration means that configuration will be taken from the nrf_drv_config.h file.
+    nrf_drv_rtc_config_t rtc_config;
+    rtc_config.prescaler = RTC_FREQ_TO_PRESCALER(RTC_FREQUENCY);
+    err_code = nrf_drv_rtc_init(&rtc, &rtc_config, rtc_handler);              //Initialize the RTC with callback function rtc_handler. The rtc_handler must be implemented in this applicaiton. Passing NULL here for RTC configuration means that configuration will be taken from the sdk_config.h file.
     APP_ERROR_CHECK(err_code);
 
-    err_code = nrf_drv_rtc_cc_set(&rtc,0,RTC_CC_VALUE,true);           //Set RTC compare value to trigger interrupt. Configure the interrupt frequency by adjust RTC_CC_VALUE and RTC2_CONFIG_FREQUENCY constant in the nrf_drv_config.h file
+    err_code = nrf_drv_rtc_cc_set(&rtc,0,RTC_CC_VALUE,true);           //Set RTC compare value to trigger interrupt. Configure the interrupt frequency by adjust RTC_CC_VALUE and RTC_FREQUENCY constant in top of main.c
     APP_ERROR_CHECK(err_code);
 
     //Power on RTC instance
@@ -149,52 +150,64 @@ static void rtc_config(void)
 
 void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
 {
+    ret_code_t err_code;
     if (p_event->type == NRF_DRV_SAADC_EVT_DONE)                                                        //Capture offset calibration complete event
     {
-        ret_code_t err_code;
 			
         LEDS_INVERT(BSP_LED_1_MASK);                                                                    //Toggle LED2 to indicate SAADC buffer full		
 
-        if((m_adc_evt_counter % SAADC_CALIBRATION_INTERVAL) == 0)                                       //Evaluate if offset calibration should be performed. Configure the SAADC_CALIBRATION_INTERVAL constant to change the calibration frequency
+        if((m_adc_evt_counter % SAADC_CALIBRATION_INTERVAL) == 0)                                  //Evaluate if offset calibration should be performed. Configure the SAADC_CALIBRATION_INTERVAL constant to change the calibration frequency
         {
-#ifdef UART_PRINTING_ENABLED
-            printf("SAADC calibration starting...  \r\n");                                              //Print on UART
-#endif //UART_PRINTING_ENABLED						
-            NRF_SAADC->EVENTS_CALIBRATEDONE = 0;                                                        //Clear the calibration event flag
-            nrf_saadc_task_trigger(NRF_SAADC_TASK_CALIBRATEOFFSET);                                     //Trigger calibration task
-            while(!NRF_SAADC->EVENTS_CALIBRATEDONE);                                                    //Wait until calibration task is completed. The calibration tasks takes about 1000us with 10us acquisition time. Configuring shorter or longer acquisition time will make the calibration take shorter or longer respectively.
-            while(NRF_SAADC->STATUS == (SAADC_STATUS_STATUS_Busy << SAADC_STATUS_STATUS_Pos));          //Additional wait for busy flag to clear. Without this wait, calibration is actually not completed. This may take additional 100us - 300us
-            LEDS_INVERT(BSP_LED_2_MASK);                                                                //Toggle LED3 to indicate SAADC calibration complete
-#ifdef UART_PRINTING_ENABLED
-            printf("SAADC calibration complete ! \r\n");                                                //Print on UART
-#endif //UART_PRINTING_ENABLED	
+            nrf_drv_saadc_abort();                                                                      // Abort all ongoing conversions. Calibration cannot be run if SAADC is busy
+            m_saadc_calibrate = true;                                                                   // Set flag to trigger calibration in main context when SAADC is stopped
         }
-     
-        err_code = nrf_drv_saadc_buffer_convert(p_event->data.done.p_buffer, SAADC_SAMPLES_IN_BUFFER);  //Set buffer so the SAADC can write to it again. This is either "buffer 1" or "buffer 2"
-        APP_ERROR_CHECK(err_code);
+        
+
 #ifdef UART_PRINTING_ENABLED
-        printf("ADC event number: %d\r\n",(int)m_adc_evt_counter);                                      //Print the event number on UART
-        for (int i = 0; i < SAADC_SAMPLES_IN_BUFFER; i++)
+        NRF_LOG_INFO("ADC event number: %d\r\n",(int)m_adc_evt_counter);                                //Print the event number on UART
+
+        for (int i = 0; i < p_event->data.done.size; i++)
         {
-            printf("%d\r\n", p_event->data.done.p_buffer[i]);                                           //Print the SAADC result on UART
+            NRF_LOG_INFO("%d\r\n", p_event->data.done.p_buffer[i]);                                     //Print the SAADC result on UART
         }
+#endif //UART_PRINTING_ENABLED      
+        
+        if(m_saadc_calibrate == false)
+        {
+            err_code = nrf_drv_saadc_buffer_convert(p_event->data.done.p_buffer, SAADC_SAMPLES_IN_BUFFER);             //Set buffer so the SAADC can write to it again. 
+            APP_ERROR_CHECK(err_code);
+        }
+        
         m_adc_evt_counter++;
-#endif //UART_PRINTING_ENABLED				
-				
-        nrf_drv_saadc_uninit();                                                                   //Unintialize SAADC to disable EasyDMA and save power
-        NRF_SAADC->INTENCLR = (SAADC_INTENCLR_END_Clear << SAADC_INTENCLR_END_Pos);               //Disable the SAADC interrupt
-        NVIC_ClearPendingIRQ(SAADC_IRQn);                                                         //Clear the SAADC interrupt if set
-        m_saadc_initialized = false;                                                              //Set SAADC as uninitialized
+  
+    }
+    else if (p_event->type == NRF_DRV_SAADC_EVT_CALIBRATEDONE)
+    {
+        LEDS_INVERT(BSP_LED_2_MASK);                                                                    //Toggle LED3 to indicate SAADC calibration complete
+        
+        err_code = nrf_drv_saadc_buffer_convert(m_buffer_pool[0], SAADC_SAMPLES_IN_BUFFER);             //Set buffer so the SAADC can write to it again. 
+        APP_ERROR_CHECK(err_code);
+        err_code = nrf_drv_saadc_buffer_convert(m_buffer_pool[1], SAADC_SAMPLES_IN_BUFFER);             //Need to setup both buffers, as they were both removed with the call to nrf_drv_saadc_abort before calibration.
+        APP_ERROR_CHECK(err_code);
+        
+#ifdef UART_PRINTING_ENABLED
+        NRF_LOG_INFO("SAADC calibration complete ! \r\n");                                              //Print on UART
+#endif //UART_PRINTING_ENABLED	
+        
     }
 }
+
 
 void saadc_init(void)
 {
     ret_code_t err_code;
     nrf_drv_saadc_config_t saadc_config;
     nrf_saadc_channel_config_t channel_config;
+
+
 	
     //Configure SAADC
+    saadc_config.low_power_mode = true;                                                   //Enable low power mode.
     saadc_config.resolution = NRF_SAADC_RESOLUTION_12BIT;                                 //Set SAADC resolution to 12-bit. This will make the SAADC output values from 0 (when input voltage is 0V) to 2^12=2048 (when input voltage is 3.6V for channel gain setting of 1/6).
     saadc_config.oversample = SAADC_OVERSAMPLE;                                           //Set oversample to 4x. This will make the SAADC output a single averaged value when the SAMPLE task is triggered 4 times.
     saadc_config.interrupt_priority = APP_IRQ_PRIORITY_LOW;                               //Set SAADC interrupt to low priority.
@@ -225,34 +238,49 @@ void saadc_init(void)
 
     err_code = nrf_drv_saadc_buffer_convert(m_buffer_pool[0],SAADC_SAMPLES_IN_BUFFER);    //Set SAADC buffer 1. The SAADC will start to write to this buffer
     APP_ERROR_CHECK(err_code);
+
     
     err_code = nrf_drv_saadc_buffer_convert(m_buffer_pool[1],SAADC_SAMPLES_IN_BUFFER);    //Set SAADC buffer 2. The SAADC will write to this buffer when buffer 1 is full. This will give the applicaiton time to process data in buffer 1.
     APP_ERROR_CHECK(err_code);
+
 }
+
 
 /**
  * @brief Function for main application entry.
  */
 int main(void)
-{	
+{
     LEDS_CONFIGURE(LEDS_MASK);                       //Configure all leds
     LEDS_OFF(LEDS_MASK);                             //Turn off all leds
 	
     NRF_POWER->DCDCEN = 1;                           //Enabling the DCDC converter for lower current consumption
 	
 #ifdef UART_PRINTING_ENABLED
-    uart_config();                                   //Configure UART. UART is used to show the SAADC sampled result.
-    printf("\n\rSAADC HAL simple example.\r\n");	
+    uint32_t err_code = NRF_LOG_INIT(NULL);
+    APP_ERROR_CHECK(err_code);                       //Configure Logging. LOGGING is used to show the SAADC sampled result. Default is UART, but RTT can be configured in sdk_config.h
+    NRF_LOG_INFO("\n\rSAADC Low Power Example.\r\n");	
 #endif //UART_PRINTING_ENABLED	
 
     lfclk_config();                                  //Configure low frequency 32kHz clock
     rtc_config();                                    //Configure RTC. The RTC will generate periodic interrupts. Requires 32kHz clock to operate.
 
-    while(1)
+    saadc_init();                                    //Initialize and start SAADC
+    
+    while (1)
     {
-        __WFE();                                     //These three commands disable the CPU. CPU will wake up again on any event or interrupt.
-        __SEV();
-        __WFE();
+        if(m_saadc_calibrate == true)
+        {
+#ifdef UART_PRINTING_ENABLED
+            NRF_LOG_INFO("SAADC calibration starting...  \r\n");    //Print on UART
+#endif //UART_PRINTING_ENABLED	
+            while(nrf_drv_saadc_calibrate_offset() != NRF_SUCCESS); //Trigger calibration task
+            m_saadc_calibrate = false;
+        }
+        nrf_pwr_mgmt_run();
+#ifdef UART_PRINTING_ENABLED
+        NRF_LOG_FLUSH();
+#endif //UART_PRINTING_ENABLED
     }
 }
 

@@ -5,23 +5,23 @@ ble_app_uart__saadc_timer_driven__scan_mode example
  
 Requirements
 ------------
-- nRF5 SDK version 11.0.0
-- nRF52-DK
-- Softdevice S132 2.0.x
+- nRF5 SDK version 13.0.0
+- nRF52-DK / nRF52840-PDK
+- Softdevice S132 v4.0.2 / S140 v5.0.0-2.alpha
 
-To compile it, clone the repository in the \nRF5_SDK_11.0.0_89a8197\examples\peripheral\ folder.  If you download the zip, place the ble_app_uart__saadc_timer_driven__scan_mode folder into the \nRF5_SDK_11.0.0_89a8197\examples\peripheral\ folder.
+To compile it, clone the repository in the \nRF5_SDK_13.0.0_04a0bfd\examples\peripheral\ folder. If you download the zip, place the ble_app_uart__saadc_timer_driven__scan_mode folder into the \nRF5_SDK_13.0.0_04a0bfd\examples\peripheral\ folder.
 
 Documentation
 -----------------
 - Perhipheral: nRF52 SAADC
-- Compatibility: nRF52 rev 1, nRF5 SDK 11.0.0
-- Softdevice used: S132 2.0.1
+- Compatibility: nRF52 rev 1, nRF5 SDK 13.0.0
+- Softdevice used: S132 v4.0.2 / S140 v5.0.0-2.alpha
 
-This SAADC example samples on 4 different input pins, and enables scan mode to do that. It is otherwise an offspring from the standard ble_app_uart example available in nRF5 SDK 11.0.0
+This SAADC example samples on 4 different input pins, and enables scan mode to do that. It is otherwise an offspring from the standard ble_app_uart example available in nRF5 SDK 13.0.0
 
 - Transmits SAADC output to hardware UART and over BLE via Nordic UART Servive (NUS).
-- Info on NUS -> http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v11.0.0/ble_sdk_app_nus_eval.html?cp=5_0_0_4_2_2_18
-- Info on hardware UART settings -> http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v11.0.0/uart_example.html?cp=5_0_0_4_5_33
+- Info on NUS -> http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v13.0.0/ble_sdk_app_nus_eval.html?cp=4_0_0_4_1_2_17
+- Info on hardware UART settings -> http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v13.0.0/uart_example.html?cp=4_0_0_4_4_41
 
 About this project
 ------------------
