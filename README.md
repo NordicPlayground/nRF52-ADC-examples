@@ -1,14 +1,14 @@
-nrf52-ADC-examples
+nRF52-ADC-examples
 ==================
 
  This repository contains code examples that show nrf52 SAADC functionality.
  
 Requirements
 ------------
-- nRF5 SDK version 11.0.0
-- nRF52-DK
+- nRF5 SDK version 13.0.0
+- nRF52-DK / nRF52840-PDK
 
-To compile it, clone the repository in the \nRF5_SDK_11.0.0_89a8197\examples\peripheral\ folder.  If you download the zip, place each of the project folders of this repository into the \nRF5_SDK_11.0.0_89a8197\examples\peripheral\ folder.
+To compile it, clone the repository in the \nRF5_SDK_13.0.0_04a0bfd\examples\peripheral\ folder. If you download the zip, place each of the project folders of this repository into the \nRF5_SDK_13.0.0_04a0bfd\examples\peripheral\ folder.
 
 Documentation
 -----------------
