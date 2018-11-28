@@ -333,20 +333,6 @@
 #define NRFX_TIMER2_ENABLED 0
 #endif
 
-// <q> NRFX_TIMER3_ENABLED  - Enable TIMER3 instance
- 
-
-#ifndef NRFX_TIMER3_ENABLED
-#define NRFX_TIMER3_ENABLED 0
-#endif
-
-// <q> NRFX_TIMER4_ENABLED  - Enable TIMER4 instance
- 
-
-#ifndef NRFX_TIMER4_ENABLED
-#define NRFX_TIMER4_ENABLED 0
-#endif
-
 // <o> NRFX_TIMER_DEFAULT_CONFIG_FREQUENCY  - Timer frequency if in Timer mode
  
 // <0=> 16 MHz 
@@ -462,11 +448,6 @@
 #define NRFX_UARTE0_ENABLED 0
 #endif
 
-// <o> NRFX_UARTE1_ENABLED - Enable UARTE1 instance 
-#ifndef NRFX_UARTE1_ENABLED
-#define NRFX_UARTE1_ENABLED 0
-#endif
-
 // <o> NRFX_UARTE_DEFAULT_CONFIG_HWFC  - Hardware Flow Control
  
 // <0=> Disabled 
@@ -572,127 +553,6 @@
 
 #ifndef NRFX_UARTE_CONFIG_DEBUG_COLOR
 #define NRFX_UARTE_CONFIG_DEBUG_COLOR 0
-#endif
-
-// </e>
-
-// </e>
-
-// <e> NRFX_UART_ENABLED - nrfx_uart - UART peripheral driver
-//==========================================================
-#ifndef NRFX_UART_ENABLED
-#define NRFX_UART_ENABLED 1
-#endif
-// <o> NRFX_UART0_ENABLED - Enable UART0 instance 
-#ifndef NRFX_UART0_ENABLED
-#define NRFX_UART0_ENABLED 0
-#endif
-
-// <o> NRFX_UART_DEFAULT_CONFIG_HWFC  - Hardware Flow Control
- 
-// <0=> Disabled 
-// <1=> Enabled 
-
-#ifndef NRFX_UART_DEFAULT_CONFIG_HWFC
-#define NRFX_UART_DEFAULT_CONFIG_HWFC 0
-#endif
-
-// <o> NRFX_UART_DEFAULT_CONFIG_PARITY  - Parity
- 
-// <0=> Excluded 
-// <14=> Included 
-
-#ifndef NRFX_UART_DEFAULT_CONFIG_PARITY
-#define NRFX_UART_DEFAULT_CONFIG_PARITY 0
-#endif
-
-// <o> NRFX_UART_DEFAULT_CONFIG_BAUDRATE  - Default Baudrate
- 
-// <323584=> 1200 baud 
-// <643072=> 2400 baud 
-// <1290240=> 4800 baud 
-// <2576384=> 9600 baud 
-// <3866624=> 14400 baud 
-// <5152768=> 19200 baud 
-// <7729152=> 28800 baud 
-// <8388608=> 31250 baud 
-// <10309632=> 38400 baud 
-// <15007744=> 56000 baud 
-// <15462400=> 57600 baud 
-// <20615168=> 76800 baud 
-// <30924800=> 115200 baud 
-// <61845504=> 230400 baud 
-// <67108864=> 250000 baud 
-// <123695104=> 460800 baud 
-// <247386112=> 921600 baud 
-// <268435456=> 1000000 baud 
-
-#ifndef NRFX_UART_DEFAULT_CONFIG_BAUDRATE
-#define NRFX_UART_DEFAULT_CONFIG_BAUDRATE 30924800
-#endif
-
-// <o> NRFX_UART_DEFAULT_CONFIG_IRQ_PRIORITY  - Interrupt priority
- 
-// <0=> 0 (highest) 
-// <1=> 1 
-// <2=> 2 
-// <3=> 3 
-// <4=> 4 
-// <5=> 5 
-// <6=> 6 
-// <7=> 7 
-
-#ifndef NRFX_UART_DEFAULT_CONFIG_IRQ_PRIORITY
-#define NRFX_UART_DEFAULT_CONFIG_IRQ_PRIORITY 6
-#endif
-
-// <e> NRFX_UART_CONFIG_LOG_ENABLED - Enables logging in the module.
-//==========================================================
-#ifndef NRFX_UART_CONFIG_LOG_ENABLED
-#define NRFX_UART_CONFIG_LOG_ENABLED 0
-#endif
-// <o> NRFX_UART_CONFIG_LOG_LEVEL  - Default Severity level
- 
-// <0=> Off 
-// <1=> Error 
-// <2=> Warning 
-// <3=> Info 
-// <4=> Debug 
-
-#ifndef NRFX_UART_CONFIG_LOG_LEVEL
-#define NRFX_UART_CONFIG_LOG_LEVEL 3
-#endif
-
-// <o> NRFX_UART_CONFIG_INFO_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef NRFX_UART_CONFIG_INFO_COLOR
-#define NRFX_UART_CONFIG_INFO_COLOR 0
-#endif
-
-// <o> NRFX_UART_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
- 
-// <0=> Default 
-// <1=> Black 
-// <2=> Red 
-// <3=> Green 
-// <4=> Yellow 
-// <5=> Blue 
-// <6=> Magenta 
-// <7=> Cyan 
-// <8=> White 
-
-#ifndef NRFX_UART_CONFIG_DEBUG_COLOR
-#define NRFX_UART_CONFIG_DEBUG_COLOR 0
 #endif
 
 // </e>
@@ -930,31 +790,10 @@
 #define UART_EASY_DMA_SUPPORT 1
 #endif
 
-// <q> UART_LEGACY_SUPPORT  - Driver supporting Legacy mode
- 
-
-#ifndef UART_LEGACY_SUPPORT
-#define UART_LEGACY_SUPPORT 1
-#endif
-
 // <e> UART0_ENABLED - Enable UART0 instance
 //==========================================================
 #ifndef UART0_ENABLED
 #define UART0_ENABLED 1
-#endif
-// <q> UART0_CONFIG_USE_EASY_DMA  - Default setting for using EasyDMA
- 
-
-#ifndef UART0_CONFIG_USE_EASY_DMA
-#define UART0_CONFIG_USE_EASY_DMA 1
-#endif
-
-// </e>
-
-// <e> UART1_ENABLED - Enable UART1 instance
-//==========================================================
-#ifndef UART1_ENABLED
-#define UART1_ENABLED 0
 #endif
 // </e>
 
@@ -1082,22 +921,6 @@
 // <29=> 29 (P0.29) 
 // <30=> 30 (P0.30) 
 // <31=> 31 (P0.31) 
-// <32=> 32 (P1.0) 
-// <33=> 33 (P1.1) 
-// <34=> 34 (P1.2) 
-// <35=> 35 (P1.3) 
-// <36=> 36 (P1.4) 
-// <37=> 37 (P1.5) 
-// <38=> 38 (P1.6) 
-// <39=> 39 (P1.7) 
-// <40=> 40 (P1.8) 
-// <41=> 41 (P1.9) 
-// <42=> 42 (P1.10) 
-// <43=> 43 (P1.11) 
-// <44=> 44 (P1.12) 
-// <45=> 45 (P1.13) 
-// <46=> 46 (P1.14) 
-// <47=> 47 (P1.15) 
 // <4294967295=> Not connected 
 
 #ifndef NRF_PWR_MGMT_SLEEP_DEBUG_PIN
@@ -1133,7 +956,7 @@
  
 
 #ifndef NRF_PWR_MGMT_CONFIG_FPU_SUPPORT_ENABLED
-#define NRF_PWR_MGMT_CONFIG_FPU_SUPPORT_ENABLED 1
+#define NRF_PWR_MGMT_CONFIG_FPU_SUPPORT_ENABLED 0
 #endif
 
 // <q> NRF_PWR_MGMT_CONFIG_AUTO_SHUTDOWN_RETRY  - Blocked shutdown procedure will be retried every second.
