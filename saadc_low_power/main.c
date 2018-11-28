@@ -83,9 +83,9 @@
 #include "nrf_drv_clock.h"
 #include "nrf_drv_rtc.h"
 
-#define NRF_LOG_MODULE_NAME "APP"
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
+#include "nrf_log_default_backends.h"
 
 #define UART_PRINTING_ENABLED                     //Enable to see SAADC output on UART. Comment out for low power operation.
 #define UART_TX_BUF_SIZE 256                      //UART TX buffer size. 
@@ -258,6 +258,7 @@ int main(void)
 	
 #ifdef UART_PRINTING_ENABLED
     uint32_t err_code = NRF_LOG_INIT(NULL);
+    NRF_LOG_DEFAULT_BACKENDS_INIT();
     APP_ERROR_CHECK(err_code);                       //Configure Logging. LOGGING is used to show the SAADC sampled result. Default is UART, but RTT can be configured in sdk_config.h
     NRF_LOG_INFO("\n\rSAADC Low Power Example.\r\n");	
 #endif //UART_PRINTING_ENABLED	
