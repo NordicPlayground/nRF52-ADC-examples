@@ -5,15 +5,15 @@ saadc_low_power example
  
 Requirements
 ------------
-- nRF5 SDK version 13.0.0
-- nRF52-DK/nRF52840-PDK
+- nRF5 SDK version 15.2.0
+- nRF52-DK/nRF52840-DK
 
-To compile it, clone the repository in the \nRF5_SDK_13.0.0_04a0bfd\examples\peripheral\ folder. If you download the zip, place the saadc_low_power folder into the \nRF5_SDK_13.0.0_04a0bfd\examples\peripheral\ folder.
+To compile it, clone the repository in the \nRF5_SDK_15.2.0_9412b96\examples\peripheral\ folder. If you download the zip, place the saadc_low_power folder into the \nRF5_SDK_15.2.0_9412b96\examples\peripheral\ folder.
 
 Documentation
 -----------------
 - Perhipheral: nRF52 SAADC
-- Compatibility: nRF52832 rev 1/nRF52840 eng A nRF5, SDK 13.0.0
+- Compatibility: nRF52832 rev. 1 and 2/nRF52840 rev. 1, nRF5 SDK 15.2.0
 - Softdevice used: No softdevice
   
 This example enables the RTC timer to periodically trigger SAADC sampling. RTC is chosen here instead of TIMER because it is low power. The example samples on a single input pin, the AIN0, which maps to physical pin P0.02 on the nRF52832/nRF52840 ICs.
@@ -30,13 +30,13 @@ This SAADC example shows the following features:
     2) Low power can only be obtained when UART_PRINTING_ENABLED is not defined. If the UART is enabled, it will add around 700uA current consumption.  
     3) Enable DCDC converter at startup with `NRF_POWER->DCDCEN = 1;`  
     4) Use RTC instead of TIMER periperal. That will save ~300uA.
-- **Oversampling ->** This reduces SAADC noise level, especially for higher SAADC resolutions, see https://devzone.nordicsemi.com/question/83938/nrf52832-saadc-sampling/?answer=84158#post-id-84158   Configured with the SAADC_OVERSAMPLE constant.
+- **Oversampling ->** This reduces SAADC noise level, especially for higher SAADC resolutions, see https://devzone.nordicsemi.com/f/nordic-q-a/14583/nrf52832-saadc-sampling/55670#55670   Configured with the SAADC_OVERSAMPLE constant.
 - **BURST mode ->** Burst mode can be combined with oversampling, which makes the SAADC sample all oversamples as fast as it can with one SAMPLE task trigger. Set the SAADC_BURST_MODE constant to enable BURST mode.
-- **Offset Calibration ->** SAADC needs to be occasionally calibrated. The desired calibration interval depends on the expected temperature change rate, see the nRF52832 PS/nRF52840 OPS for more information. The calibration interval can be adjusted with configuring the SAADC_CALIBRATION_INTERVAL constant.
+- **Offset Calibration ->** SAADC needs to be occasionally calibrated. The desired calibration interval depends on the expected temperature change rate, see the nRF52832 PS/nRF52840 PS for more information. The calibration interval can be adjusted with configuring the SAADC_CALIBRATION_INTERVAL constant.
 
-The SAADC sample result is printed on UART using the NRF_LOG module. To see the UART output, a UART terminal (e.g. Realterm or Termite) can be configured on your PC with the UART configuration set in the uart_config function, which is also described in the SAADC example documentation -> http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v13.0.0/nrf_dev_saadc_example.html?cp=4_0_0_4_4_28
+The SAADC sample result is printed on UART using the NRF_LOG module. To see the UART output, a UART terminal (e.g. Realterm or Termite) can be configured on your PC with the UART configuration set in the uart_config function, which is also described in the SAADC example documentation -> https://www.nordicsemi.com/en/DocLib/Content/SDK_Doc/nRF5_SDK/v15-2-0/nrf_dev_saadc_example
   
-Indicators on the nRF52-DK/nRF52840-PDK board:
+Indicators on the nRF52-DK/nRF52840-DK board:
 - LED1: SAADC Sampling triggered 
 - LED2: SAADC sampling buffer full and event received
 - LED3: SAADC Offset calibration complete
