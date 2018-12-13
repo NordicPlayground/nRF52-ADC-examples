@@ -5,23 +5,23 @@ ble_app_uart__saadc_timer_driven__scan_mode example
  
 Requirements
 ------------
-- nRF5 SDK version 13.0.0
-- nRF52-DK / nRF52840-PDK
-- Softdevice S132 v4.0.2 / S140 v5.0.0-2.alpha
+- nRF5 SDK version 15.2.0
+- nRF52-DK / nRF52840-DK
+- Softdevice S132 v6.1.0 / S140 v6.1.0
 
-To compile it, clone the repository in the \nRF5_SDK_13.0.0_04a0bfd\examples\peripheral\ folder. If you download the zip, place the ble_app_uart__saadc_timer_driven__scan_mode folder into the \nRF5_SDK_13.0.0_04a0bfd\examples\peripheral\ folder.
+To compile it, clone the repository in the \nRF5_SDK_15.2.0_9412b96\examples\nRF52-ADC-examples folder. If you download the zip, place the ble_app_uart__saadc_timer_driven__scan_mode folder into the \nRF5_SDK_15.2.0_9412b96\examples\ble_peripheral\ folder.
 
 Documentation
 -----------------
 - Perhipheral: nRF52 SAADC
-- Compatibility: nRF52 rev 1, nRF5 SDK 13.0.0
-- Softdevice used: S132 v4.0.2 / S140 v5.0.0-2.alpha
+- Compatibility: nRF52832 rev. 1 and 2/nRF52832 rev. 1, nRF5 SDK 15.2.0
+- Softdevice used: S132 v6.1.0 / S140 v6.1.0
 
-This SAADC example samples on 4 different input pins, and enables scan mode to do that. It is otherwise an offspring from the standard ble_app_uart example available in nRF5 SDK 13.0.0
+This SAADC example samples on 4 different input pins, and enables scan mode to do that. It is otherwise an offspring from the standard ble_app_uart example available in nRF5 SDK 15.2.0
 
 - Transmits SAADC output to hardware UART and over BLE via Nordic UART Servive (NUS).
-- Info on NUS -> http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v13.0.0/ble_sdk_app_nus_eval.html?cp=4_0_0_4_1_2_17
-- Info on hardware UART settings -> http://infocenter.nordicsemi.com/topic/com.nordic.infocenter.sdk5.v13.0.0/uart_example.html?cp=4_0_0_4_4_41
+- Info on NUS -> https://www.nordicsemi.com/en/DocLib/Content/SDK_Doc/nRF5_SDK/v15-2-0/ble_sdk_app_nus_eval
+- Info on hardware UART settings -> https://www.nordicsemi.com/en/DocLib/Content/SDK_Doc/nRF5_SDK/v15-2-0/uart_example
 
 About this project
 ------------------
