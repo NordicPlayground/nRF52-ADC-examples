@@ -127,7 +127,11 @@ static ble_uuid_t m_adv_uuids[]          =                                      
 
 volatile uint8_t state = 1;
 
+#ifdef NRF52810_XXAA
+static const nrf_drv_timer_t   m_timer = NRF_DRV_TIMER_INSTANCE(2);
+#else
 static const nrf_drv_timer_t   m_timer = NRF_DRV_TIMER_INSTANCE(3);
+#endif
 static nrf_saadc_value_t       m_buffer_pool[2][SAADC_SAMPLES_IN_BUFFER];
 static nrf_ppi_channel_t       m_ppi_channel;
 static uint32_t                m_adc_evt_counter;
