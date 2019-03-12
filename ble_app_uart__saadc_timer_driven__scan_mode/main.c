@@ -784,7 +784,7 @@ void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
             bytes_to_send = 20;
         }
         err_code = ble_nus_data_send(&m_nus, value, &bytes_to_send, m_conn_handle);
-        if (err_code != NRF_ERROR_INVALID_STATE) 
+        if ((err_code != NRF_ERROR_INVALID_STATE) && (err_code != NRF_ERROR_NOT_FOUND)) 
         {
             APP_ERROR_CHECK(err_code);
         }
