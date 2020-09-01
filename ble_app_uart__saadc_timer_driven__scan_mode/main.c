@@ -110,7 +110,7 @@
 #define UART_RX_BUF_SIZE                256                                         /**< UART RX buffer size. */
 
 #define SAADC_SAMPLES_IN_BUFFER         4
-#define SAADC_SAMPLE_RATE		250                                         /**< SAADC sample rate in ms. */               
+#define SAADC_SAMPLE_RATE               250                                         /**< SAADC sample rate in ms. */               
 
 
 BLE_NUS_DEF(m_nus, NRF_SDH_BLE_TOTAL_LINK_COUNT);                                   /**< BLE NUS service instance. */
@@ -127,11 +127,7 @@ static ble_uuid_t m_adv_uuids[]          =                                      
 
 volatile uint8_t state = 1;
 
-#ifdef NRF52810_XXAA
-static const nrf_drv_timer_t   m_timer = NRF_DRV_TIMER_INSTANCE(2);
-#else
 static const nrf_drv_timer_t   m_timer = NRF_DRV_TIMER_INSTANCE(3);
-#endif
 static nrf_saadc_value_t       m_buffer_pool[2][SAADC_SAMPLES_IN_BUFFER];
 static nrf_ppi_channel_t       m_ppi_channel;
 static uint32_t                m_adc_evt_counter;
@@ -773,22 +769,22 @@ void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
             value[i*2] = adc_value;
             value[(i*2)+1] = adc_value >> 8;
         }
-				
-        // Send data over BLE via NUS service. Makes sure not to send more than 20 bytes.
-        if((SAADC_SAMPLES_IN_BUFFER*2) <= 20) 
-        {
-            bytes_to_send = (SAADC_SAMPLES_IN_BUFFER*2);
-        }
-        else 
-        {
-            bytes_to_send = 20;
-        }
-        err_code = ble_nus_data_send(&m_nus, value, &bytes_to_send, m_conn_handle);
-        if ((err_code != NRF_ERROR_INVALID_STATE) && (err_code != NRF_ERROR_NOT_FOUND)) 
+
+         // Send data over BLE via NUS service. Create string from samples and send string with correct length.
+        uint8_t nus_string[50];
+        bytes_to_send = sprintf(nus_string, 
+                                "CH0: %d\r\nCH1: %d\r\nCH2: %d\r\nCH3: %d",
+                                p_event->data.done.p_buffer[0],
+                                p_event->data.done.p_buffer[1],
+                                p_event->data.done.p_buffer[2],
+                                p_event->data.done.p_buffer[3]);
+
+        err_code = ble_nus_data_send(&m_nus, nus_string, &bytes_to_send, m_conn_handle);
+        if ((err_code != NRF_ERROR_INVALID_STATE) && (err_code != NRF_ERROR_NOT_FOUND))
         {
             APP_ERROR_CHECK(err_code);
         }
-						
+	
         m_adc_evt_counter++;
     }
 }
