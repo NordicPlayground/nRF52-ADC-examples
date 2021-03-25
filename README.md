@@ -5,10 +5,10 @@ nRF52-ADC-examples
  
 Requirements
 ------------
-- nRF5 SDK version 17.0.0
+- nRF5 SDK version 17.0.2
 - nRF52-DK (PCA10040) / nRF52840-DK (PCA10056) / nRF52833-DK (PCA10100)
 
-To compile it, clone the repository into \nRF5_SDK_17.0.0_9d13099\examples\nRF52-ADC-examples\ folder. If you download the zip, place each of the project folders of this repository into the \nRF5_SDK_17.0.0_9d13099\examples\peripheral\ and/or \nRF5_SDK_17.0.0_9d13099\examples\ble_peripheral\ folder.
+To compile it, clone the repository into \nRF5_SDK_17.0.2_d674dde\examples\nRF52-ADC-examples\ folder. If you download the zip, place each of the project folders of this repository into the \nRF5_SDK_17.0.2_d674dde\examples\peripheral\ and/or \nRF5_SDK_17.0.2_d674dde\examples\ble_peripheral\ folder.
 
 Documentation
 -----------------

@@ -5,17 +5,17 @@ ble_app_uart__saadc_timer_driven__scan_mode example
  
 Requirements
 ------------
-- nRF5 SDK version 17.0.0
+- nRF5 SDK version 17.0.2
 - nRF52-DK (PCA10040) / nRF52840-DK (PCA10056) / nRF52833-DK (PCA10100)
-- Softdevice S132 v7.0.1 / S140 v7.0.1
+- Softdevice S132 v7.2.0 / S140 v7.2.0
 
-To compile it, clone the repository in the \nRF5_SDK_17.0.0_9d13099\examples\nRF52-ADC-examples folder. If you download the zip, place the ble_app_uart__saadc_timer_driven__scan_mode folder into the \nRF5_SDK_17.0.0_9d13099\examples\ble_peripheral\ folder.
+To compile it, clone the repository in the \nRF5_SDK_17.0.2_d674dde\examples\nRF52-ADC-examples folder. If you download the zip, place the ble_app_uart__saadc_timer_driven__scan_mode folder into the \nRF5_SDK_17.0.2_d674dde\examples\ble_peripheral\ folder.
 
 Documentation
 -----------------
 - Perhipheral: nRF52 SAADC
-- Compatibility: nRF52832 rev. 1 and 2/nRF52832 rev. 1 and 2/nRF52833 rev. 1, nRF5 SDK 17.0.0
-- Softdevice used: S132 v7.0.1 / S140 v7.0.1
+- Compatibility: nRF52832 rev. 1 and 2/nRF52832 rev. 1 and 2/nRF52833 rev. 1, nRF5 SDK 17.0.2
+- Softdevice used: S132 v7.2.0 / S140 v7.2.0
 
 This SAADC example samples on 4 different input pins, and enables scan mode to do that. It is otherwise an offspring from the standard ble_app_uart example available in nRF5 SDK 17.0.0
 

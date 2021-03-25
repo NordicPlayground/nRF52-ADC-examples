@@ -5,15 +5,15 @@ nrfx_saadc_simple_low_power_app_timer_multichannel_oversample example
  
 Requirements
 ------------
-- nRF5 SDK version 17.0.0
+- nRF5 SDK version 17.0.2
 - nRF52-DK/nRF52840-DK
 
-To compile it, clone the repository in the \nRF5_SDK_17.0.0_9d13099\examples\peripheral\ folder. If you download the zip, place the nrfx_saadc_simple_low_power_app_timer_multichannel_oversample folder into the \nRF5_SDK_17.0.0_9d13099\examples\peripheral\ folder.
+To compile it, clone the repository in the \nRF5_SDK_17.0.2_d674dde\examples\peripheral\ folder. If you download the zip, place the nrfx_saadc_simple_low_power_app_timer_multichannel_oversample folder into the \nRF5_SDK_17.0.2_d674dde\examples\peripheral\ folder.
 
 Documentation
 -----------------
 - Perhipheral: nRF52 SAADC
-- Compatibility: nRF52832 rev. 1 and 2/nRF52840 rev. 1 and 2, nRF5 SDK 17.0.0
+- Compatibility: nRF52832 rev. 1 and 2/nRF52840 rev. 1 and 2, nRF5 SDK 17.0.2
 - Softdevice used: No softdevice
   
 This example uses the application timer library to periodically trigger SAADC sampling. App_timer runs off the 32.768kHz LFCLK, providing low power consumption. DCDC regulator is also enabled, to get the lowest current consumption possible. The example samples on four separate input pins, the AIN0-AIN3, which maps to physical pins P0.02-P0.05 on the nRF52832/nRF52840 ICs. This example also implements OVERSAMPLING and BURST mode, combined with SCAN mode.

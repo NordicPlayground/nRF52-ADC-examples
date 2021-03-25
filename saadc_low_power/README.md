@@ -5,15 +5,15 @@ saadc_low_power example
  
 Requirements
 ------------
-- nRF5 SDK version 17.0.0
+- nRF5 SDK version 17.0.2
 - nRF52-DK/nRF52840-DK
 
-To compile it, clone the repository in the \nRF5_SDK_17.0.0_9d13099\examples\peripheral\ folder. If you download the zip, place the saadc_low_power folder into the \nRF5_SDK_17.0.0_9d13099\examples\peripheral\ folder.
+To compile it, clone the repository in the \nRF5_SDK_17.0.2_d674dde\examples\peripheral\ folder. If you download the zip, place the saadc_low_power folder into the \nRF5_SDK_17.0.2_d674dde\examples\peripheral\ folder.
 
 Documentation
 -----------------
 - Perhipheral: nRF52 SAADC
-- Compatibility: nRF52832 rev. 1 and 2/nRF52840 rev. 1 and 2, nRF5 SDK 17.0.0
+- Compatibility: nRF52832 rev. 1 and 2/nRF52840 rev. 1 and 2, nRF5 SDK 17.0.2
 - Softdevice used: No softdevice
   
 This example enables the RTC timer to periodically trigger SAADC sampling. RTC is chosen here instead of TIMER because it is low power. The example samples on a single input pin, the AIN0, which maps to physical pin P0.02 on the nRF52832/nRF52840 ICs.
@@ -34,7 +34,7 @@ This SAADC example shows the following features:
 - **BURST mode ->** Burst mode can be combined with oversampling, which makes the SAADC sample all oversamples as fast as it can with one SAMPLE task trigger. Set the SAADC_BURST_MODE constant to enable BURST mode.
 - **Offset Calibration ->** SAADC needs to be occasionally calibrated. The desired calibration interval depends on the expected temperature change rate, see the nRF52832 PS/nRF52840 PS for more information. The calibration interval can be adjusted with configuring the SAADC_CALIBRATION_INTERVAL constant.
 
-The SAADC sample result is printed on UART using the NRF_LOG module, if NRF_LOG_ENABLED is set in the sdk_config.h gile. To see the UART output, a UART terminal (e.g. Realterm or Termite) can be configured on your PC with the UART configuration set in the uart_config function, which is also described in the SAADC example documentation -> https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.0.0/nrf_dev_saadc_example.html
+The SAADC sample result is printed on UART using the NRF_LOG module, if NRF_LOG_ENABLED is set in the sdk_config.h gile. To see the UART output, a UART terminal (e.g. Realterm or Termite) can be configured on your PC with the UART configuration set in the uart_config function, which is also described in the SAADC example documentation -> https://infocenter.nordicsemi.com/topic/sdk_nrf5_v17.0.2/nrf_dev_saadc_example.html
   
 Indicators on the nRF52-DK/nRF52840-DK board:
 - LED1: SAADC Sampling triggered 
